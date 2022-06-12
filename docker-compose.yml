@@ -1,0 +1,107 @@
+version: "3.8"
+
+services:
+
+  spotify:
+    image: python:alpine
+    entrypoint: sh -c "pip install --no-cache-dir spotipy && python3 /home/producer.py"
+    volumes:
+      - ./spotify_producer/producer.py:/home/producer.py
+    profiles:
+      - spotify_only_run
+    networks:
+      tap_project:
+
+  logstash:
+    image: logstash:8.1.2
+    volumes: 
+      - ./logstash/pipeline/:/usr/share/logstash/pipeline/
+    ports:
+      - 6000:6000
+    depends_on:
+      - kafkaserver
+    networks:
+      tap_project:
+
+  zookeeper:
+    image: zookeeper
+    ports:
+      - 2181:2181
+    restart: always
+    networks:
+      tap_project:
+
+  kafkaserver:
+    image: wurstmeister/kafka
+    ports:
+      - 9092:9092
+    environment:
+      # KAFKA_BROKER_ID: 0 #se non specifico mette a 1001
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafkaserver:9092
+      # KAFKA_OFFSET_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CREATE_TOPICS: topic_1:1:1
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+    depends_on:
+      - zookeeper
+    restart: always
+    networks:
+      tap_project:
+
+  kafkaui:
+    image: provectuslabs/kafka-ui
+    environment:
+      # KAFKA_CLUSTERS_0_NAME: my_cluster
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafkaserver:9092
+    ports:
+      - 8080:8080
+    depends_on:
+      - kafkaserver
+    profiles:
+      - kafkawebui
+    networks:
+      tap_project:
+
+  spark:
+    # image: mio:spark
+    build: spark
+    environment:
+      SPARK_ACTION: spark-submit-python
+    command: ["spark_script.py", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1,org.elasticsearch:elasticsearch-spark-30_2.12:8.2.0"]
+    volumes:
+      - ./spark/top_songs.csv:/opt/tap/top_songs.csv
+    ports:
+      - 4040:4040
+    depends_on:
+     - kafkaserver
+     - elasticsearch
+    networks:
+      tap_project:
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.2.0
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      # - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+    # volumes:
+    #   - ./elasticsearch/elastic_and_kibana_data/:/usr/share/elasticsearch/data
+    networks:
+      tap_project:
+
+  kibana:
+    image: kibana:8.2.2
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+    networks:
+      tap_project:
+  
+networks:
+  tap_project:

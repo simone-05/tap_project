@@ -1,0 +1,3 @@
+How to import a kibana dashboard:
+
+From kibana, go to Management -> saved objects -> import
