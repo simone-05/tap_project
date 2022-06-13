@@ -14779,7 +14779,7 @@ Quindi aggiungo a entrambi una colonna impostata a 1 per tutto <em>train1</em> e
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Per-avviare">Per avviare<a class="anchor-link" href="#Per-avviare">&#182;</a></h2><p>Dalla directory principale del progetto, eseguire i seguenti comandi:</p>
+<h2 id="Per-avviare">Per avviare<a class="anchor-link" href="#Per-avviare">&#182;</a></h2><p>Dalla directory principale del progetto, eseguire lo script ./start.sh</p>
 
 </div>
 </div>
@@ -14791,19 +14791,9 @@ Quindi aggiungo a entrambi una colonna impostata a 1 per tutto <em>train1</em> e
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>docker-compose up -d</p>
-
-</div>
-</div>
-</div>
-</div></div><div class="fragment">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h6 id="Per-avviare-la-cli-per-eseguire-le-query-su-spotify:">Per avviare la cli per eseguire le query su spotify:<a class="anchor-link" href="#Per-avviare-la-cli-per-eseguire-le-query-su-spotify:">&#182;</a></h6><p>./sproducer.sh</p>
+<p>Esso eseguirà: docker-compose -d, avviando i container di logstash, kafka, zookeeper, spark, elastic e kibana
+Ed eseguirà il container python con lo script per effettuare le query a spotify e ottenere i brani con le info su cui operare</p>
+<h5 id="Opzionale:">Opzionale:<a class="anchor-link" href="#Opzionale:">&#182;</a></h5><p>Se si vuole aggiornare il training set di canzoni, su cui spark basa le predizioni, basta uncommentare le righe specifiche in start.sh</p>
 
 </div>
 </div>

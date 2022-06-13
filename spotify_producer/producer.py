@@ -1,6 +1,7 @@
 '''
 Per non inviare a logstash, ma stampare i risultati su console (per debug), imposta la variabile "debug" a True (linea ~71)
 '''
+import os
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 from time import sleep
@@ -51,7 +52,7 @@ class Track:
     def printJson(self):
         printJson(self.__dict__)
         
-
+os.system("clear -x")
 client_id = getpass("Client id: ")
 client_secret = getpass("Client secret: ")
 try:
@@ -135,6 +136,10 @@ def getArtistsNames(track):
     return ', '.join(artists_arr)
 
 
+
+
+# --------------------------------Querying--------------------------
+
 def searchPlaylists():
     # Cerca playlist su spotify da stringa utente
     results = ""
@@ -167,25 +172,35 @@ def searchPlaylists():
     playlist_id = results[choice - 1]["id"]
 
     # prendo i brani della playlist
-    tracks = list(map(lambda x: x["track"], getPlaylistTracks(playlist_id)["items"]))
-    tracks_arr = []
-    for track in tracks:
-        x = loadTrack(json.dumps(getAudioFeatures(track["id"])[0]))
-        x.id = track["id"]
-        x.name = (track["name"] + " - " + getArtistsNames(track))
-        x.playlist = results[choice -1]["name"]
-        tracks_arr.append(x)
-
-    # invio le info dei brani come json a logstash (se non siamo in debug, altrimenti li stampa) (un messaggio per ogni brano)
+    # tracks = list(map(lambda x: x["track"], getPlaylistTracks(playlist_id)["items"]))
+    res = sp.playlist_tracks(playlist_id)
+    i = 0
     if (online and not debug):
-        for i, track in enumerate(tracks_arr):
-            log_send(track.__str__())
-            # sleep(2)
-        print("\nSent "+str(i+1)+" track features")
-    else:
-        for track in tracks_arr:
-            track.printJson()
+        print("\nSending tracks...\n")
+    while res:
+        for item in res["items"]:
+            track = item["track"]
+            # Costruisco il nuovo oggetto brano
+            track_obj = loadTrack(json.dumps(getAudioFeatures(track["id"])[0]))
+            track_obj.id = track["id"]
+            track_obj.name = (track["name"] + " - " + getArtistsNames(track))
+            track_obj.playlist = results[choice -1]["name"]
+            
+            # Invio a logstash o stampo su console l'oggetto brano
+            if (online and not debug):
+                log_send(track_obj.__str__())
+                i+=1
+            else:
+                track_obj.printJson()
+                
+        # Prendo i successivi 100 brani nella playlist
+        if res["next"]:
+            res = sp.next(res)
+        else:
+            res = None
     
+    print("\nSent "+str(i)+" track features to logstash")
+
     return 1
 
 

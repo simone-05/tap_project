@@ -1,14 +1,14 @@
 #!/bin/bash
-echo "Deleting spark archive"
+printf "\n-- Deleting spark archive --\n"
 rm spark/*.tgz
-echo "Downloading spark archive"
+printf "\n-- Downloading spark archive --\n"
 spark/get-spark.sh
 
 # Optional:
-# echo "Updating songs trainging set"
+# printf "\n-- Updating songs trainging set --\n"
 # ./update_training_sets.sh
 
-echo "Starting containers"
+printf "\n-- Starting containers --\n"
 docker-compose up -d
-echo ""
-echo "After logstash initialization you can run sproducer.sh"
+printf "\n-- Starting producer cli --\n"
+./sproducer.sh
