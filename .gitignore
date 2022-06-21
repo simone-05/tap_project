@@ -8,4 +8,4 @@ docs/.ipynb*
 spark/examples
 spark/spark*.tgz
 
-spotify_producer/examples
+webui/app/__pycache__

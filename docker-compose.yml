@@ -2,13 +2,15 @@ version: "3.8"
 
 services:
 
-  spotify:
+  webui:
     image: python:alpine
-    entrypoint: sh -c "pip install --no-cache-dir spotipy && python3 /home/producer.py"
+    command: sh -c "pip install --no-cache-dir spotipy flask && python3 /home/main.py"
     volumes:
-      - ./spotify_producer/producer.py:/home/producer.py
-    profiles:
-      - spotify_only_run
+      - ./webui:/home
+    ports:
+      - 5001:5001
+#    depends_on:
+#      - logstash
     networks:
       tap_project:
 

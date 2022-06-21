@@ -10,5 +10,3 @@ spark/get-spark.sh
 
 printf "\n-- Starting containers --\n"
 docker-compose up -d
-printf "\n-- Starting producer cli --\n"
-./sproducer.sh

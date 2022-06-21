@@ -1,0 +1,68 @@
+body {
+    /* background-color: #070818; */
+    /* color: #fff; */
+    font-family: sans-serif;
+    font-size: 1.2em;
+}
+
+input {
+    margin: 1%;
+    padding: 5px;
+    font-size: 1rem;
+}
+
+li {
+    margin: 10px;
+}
+
+.nolink {
+    /* link non sottolineato */
+    text-decoration: none;
+}
+
+.list-item {
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.list-item:hover {
+    background-color: #e7e7e7;
+}
+
+.item-button {
+    width: 50px;
+    height: 30px;
+    border: #000 solid 1px;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.item-button:hover {
+    background-color: #000;
+    color: #fff
+}
+
+
+.loader {
+    margin: 0 0 2em;
+    height: 100px;
+    width: 20%;
+    text-align: center;
+    padding: 1em;
+    margin: 0 auto 1em;
+    display: inline-block;
+    vertical-align: top;
+}
+
+/* Set the color of the icon */
+svg path, svg rect {
+    fill: #888;
+}
+    
