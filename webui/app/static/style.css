@@ -32,10 +32,10 @@ li {
     background-color: #e7e7e7;
 }
 
-.item-button {
-    width: 50px;
-    height: 30px;
-    border: #000 solid 1px;
+.custom-btn {
+    background-color: #fff;
+    padding: 6px;
+    border: #000 solid 1.5px;
     border-radius: 5px;
     font-size: 1rem;
     color: #000;
@@ -44,9 +44,10 @@ li {
     justify-content: center;
 }
 
-.item-button:hover {
+.custom-btn:hover {
     background-color: #000;
-    color: #fff
+    color: #fff;
+    cursor: pointer;
 }
 
 
@@ -60,9 +61,3 @@ li {
     display: inline-block;
     vertical-align: top;
 }
-
-/* Set the color of the icon */
-svg path, svg rect {
-    fill: #888;
-}
-    

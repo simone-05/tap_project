@@ -6,72 +6,37 @@
     <link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
-    <a class="nolink" style="position:absolute; margin: 2vh 2vw;" href="/login" tabindex="-1"><--</a>
     <div style="margin: 3vh 10vw">
         <div style="display: flex; flex-wrap: wrap; align-content: space-between;">
             <div style="display: block">
-                <h1>Search</h1>
+                <div style="display: flex; align-items: center;">
+                    <a href="/login" tabindex="-1" style="position: absolute; left: 4vw; height: 40px">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40px" height="40px" stroke="#444" viewBox="0 0 16 16">
+                            <path  d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
+                        </svg>
+                    </a>
+                    <h1>Search</h1>
+                </div>
                 <form style="display: flex; gap: 20px" method="get" action="/home/search">
                     <input style="width: 30vw; margin-left: 0" type="text" name="query" placeholder="search for playlist or track" value="{{query}}">
-                    <input type="submit" name="query_type" value="playlist">
-                    <input type="submit" name="query_type" value="track">
+                    <input class="custom-btn" type="submit" name="query_type" value="playlist">
+                    <input class="custom-btn" type="submit" name="query_type" value="track">
                 </form>
             </div>
-            <!-- <div id="logstash" style="margin-left: auto; display: flex;justify-content: center; align-items: center">
-                <p style="color: #e22">logstash not ready yet</p>
-                <div style="margin-left: 10px">
-                    <svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" stroke="#000">
-                        <g fill="none" fill-rule="evenodd" stroke-width="2">
-                            <circle cx="22" cy="22" r="1">
-                                <animate attributeName="r"
-                                    begin="0s" dur="1.8s"
-                                    values="1; 20"
-                                    calcMode="spline"
-                                    keyTimes="0; 1"
-                                    keySplines="0.165, 0.84, 0.44, 1"
-                                    repeatCount="indefinite" />
-                                <animate attributeName="stroke-opacity"
-                                    begin="0s" dur="1.8s"
-                                    values="1; 0"
-                                    calcMode="spline"
-                                    keyTimes="0; 1"
-                                    keySplines="0.3, 0.61, 0.355, 1"
-                                    repeatCount="indefinite" />
-                            </circle>
-                            <circle cx="22" cy="22" r="1">
-                                <animate attributeName="r"
-                                    begin="-0.9s" dur="1.8s"
-                                    values="1; 20"
-                                    calcMode="spline"
-                                    keyTimes="0; 1"
-                                    keySplines="0.165, 0.84, 0.44, 1"
-                                    repeatCount="indefinite" />
-                                <animate attributeName="stroke-opacity"
-                                    begin="-0.9s" dur="1.8s"
-                                    values="1; 0"
-                                    calcMode="spline"
-                                    keyTimes="0; 1"
-                                    keySplines="0.3, 0.61, 0.355, 1"
-                                    repeatCount="indefinite" />
-                            </circle>
-                        </g>
-                    </svg>
-                </div>
-            </div> -->
         </div>
 
         <!-- LISTA -->
-        <div style="margin-top: 8vh">
+        <div style="margin-top: 6vh">
             <p>{{ status }}</p>
             {% for item in lista %}
             <div class="list-item">
                 <a class="nolink" target="_blank" href="https://open.spotify.com/{{ item['type'] }}/{{item['id']}}">{{ item['name'] }}</a>
                 <div style="margin-left: auto; display: flex; gap: 20px">
                     <a target="_blank" class="nolink" href="/view?type={{item['type']}}&id={{item['id']}}&limit=5">
-                        <div class="item-button"> Raw </div>
+                        <div class="custom-btn"> Raw </div>
                     </a>
                     <a class="nolink" href="/send?type={{item['type']}}&id={{item['id']}}">
-                        <div class="item-button"> Send </div>
+                        <div class="custom-btn"> Send </div>
                     </a>
                 </div>
             </div>

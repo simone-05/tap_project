@@ -8,4 +8,5 @@ docs/.ipynb*
 spark/examples
 spark/spark*.tgz
 
+webui/.cache/
 webui/app/__pycache__
