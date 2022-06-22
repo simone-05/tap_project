@@ -14712,7 +14712,22 @@ Alto livello: una serie di indici per classificare il brano, che forniscono info
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Python">Python<a class="anchor-link" href="#Python">&#182;</a></h2><p>Per eseguire richieste all'api di spotify ho usato una libreria apposita di python: <em>spotipy</em>.
+<h2 id="Web-ui">Web ui<a class="anchor-link" href="#Web-ui">&#182;</a></h2><p>Ho costruito un piccolo front-end per fare il login con le credenziali di un client spotify, ed eseguire le query e ottenere una lista dei primi 10 risultati.
+Cliccando sul titolo, si va alla pagina spotify corrispondente. Possiamo vedere il risultato come json, e inviarlo a logstash.
+Il codice python è servito da flask, sulla porta 5001.</p>
+
+</div>
+</div>
+</div>
+</div></section></section><section><section>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="Python">Python<a class="anchor-link" href="#Python">&#182;</a></h2><p>Dietro la pagna web, sta uno script producer.py, che esegue le query a spotify.
+Per eseguire richieste all'api di spotify ho usato una libreria apposita di python: <em>spotipy</em>.
 Prima di poter fare richieste però è necessario prima però creare un'applicazione sulla dashboard di spotify developer, e connettere lo script ad essa con <em>client id</em> e <em>secret</em>.
 Successivamente si possono effettuare richieste del tipo:<br>
 <code>sp.search("Timber", limit=4)</code> Restituisce un json con i primi 4 risultati della ricerca "Timber"<br>
@@ -14768,6 +14783,13 @@ Creo 2 dataframe di training, nel primo (<em>train1</em> ) carico il dataset csv
 Il secondo dataframe di training (train_inverse), invece lo creo basandomi sul primo, ad ogni valore mappo 1 - valore in <em>train1</em> in modo da avere un set fittizio di canzoni con valori esattamente opposti a quelle più popolari.
 Quindi aggiungo a entrambi una colonna impostata a 1 per tutto <em>train1</em> e a 0 per tutto train_inverse</p>
 <p>Per ogni brano o insieme di brani in arrivo, eseguo le operazioni in pipeline, che aggiungeranno la colonna di <em>prediction</em>, che avrà un valore in base a quanto gli indici di speechness, valence, ecc.. saranno simili a quelli delle top songs.</p>
+<p>Quindi invio il risultato ad elasticsearch con:</p>
+
+<pre><code>(df.writeStream
+    .option("checkpointLocation", "/temp/tmp/checkpoints")
+    .format("es")
+    .start(es_index)
+    .awaitTermination())</code></pre>
 
 </div>
 </div>
@@ -14779,8 +14801,7 @@ Quindi aggiungo a entrambi una colonna impostata a 1 per tutto <em>train1</em> e
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Per-avviare">Per avviare<a class="anchor-link" href="#Per-avviare">&#182;</a></h2>
-<pre><code>./start.sh</code></pre>
+<h2 id="Per-avviare">Per avviare<a class="anchor-link" href="#Per-avviare">&#182;</a></h2><p>Dalla directory principale del progetto, eseguire lo script ./start.sh</p>
 
 </div>
 </div>
@@ -14792,8 +14813,8 @@ Quindi aggiungo a entrambi una colonna impostata a 1 per tutto <em>train1</em> e
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Esso eseguirà: docker-compose -d, avviando i container di logstash, kafka, zookeeper, spark, elastic e kibana
-Ed eseguirà il container python con lo script per effettuare le query a spotify e ottenere i brani con le info su cui operare</p>
+<p>Esso scaricherà i file necessari, ovvero solo l'archivio di spark-hadoop, per costruire la docker image.
+Dopodichè eseguirà: docker-compose -d, avviando i container della ui, logstash, kafka, zookeeper, spark, elastic e kibana.</p>
 <h5 id="Opzionale:">Opzionale:<a class="anchor-link" href="#Opzionale:">&#182;</a></h5><p>Se si vuole aggiornare il training set di canzoni, su cui spark basa le predizioni, basta uncommentare le righe specifiche in start.sh</p>
 
 </div>
